@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Carica il dataset (assicurati che il percorso sia corretto)
+df = pd.read_csv('data/mnist_train.csv')
+
+# Dimensione del dataset
+print("Shape del dataset:", df.shape)
+
+# Prime 5 righe
+print("\nPrime 5 righe:")
+print(df.head())
+
+# Informazioni generali
+print("\nInfo:")
+print(df.info())
+
+# Valori nulli
+print("\nValori nulli:")
+print(df.isnull().sum())
+
+# Statistiche descrittive
+print("\nStatistiche descrittive:")
+print(df.describe())
+
+# Distribuzione delle etichette (label da 0 a 9)
+plt.figure(figsize=(8, 5))
+sns.countplot(x=df['label'])
+plt.title('Distribuzione delle cifre (0-9)')
+plt.xlabel('Cifra')
+plt.ylabel('Frequenza')
+plt.show()
+
+# Visualizza la prima immagine del dataset
+prima_immagine = df.iloc[0, 1:].values.reshape(28, 28)
+plt.imshow(prima_immagine, cmap='gray')
+plt.title(f"Etichetta: {df.iloc[0, 0]}")
+plt.axis('off')
+plt.show()
+
+# Heatmap della correlazione (solo primi 100 pixel per velocità)
+corr = df.iloc[:, 1:101].corr()
+plt.figure(figsize=(12, 10))
+sns.heatmap(corr, cmap='coolwarm', annot=False)
+plt.title("Correlazione tra i primi 100 pixel")
+plt.show()
