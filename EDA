@@ -47,7 +47,7 @@ def mostra_immagini(df, n=10):
 
 mostra_immagini(df)
 
-# (Bonus) Calcolo l'immagine "media" per ogni cifra
+# Calcolo l'immagine "media" per ogni cifra
 mean_images = df.groupby("label").mean()
 
 plt.figure(figsize=(12, 6))
