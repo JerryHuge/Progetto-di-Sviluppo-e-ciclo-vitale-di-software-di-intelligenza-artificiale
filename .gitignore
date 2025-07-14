@@ -1,0 +1,4 @@
+# Ignora la cartella dei dati
+data/
+*.csv
+*.zip
