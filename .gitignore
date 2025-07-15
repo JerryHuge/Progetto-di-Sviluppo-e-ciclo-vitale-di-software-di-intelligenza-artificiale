@@ -6,3 +6,11 @@ data/
 # Ignora modello e grafico generati
 outputs/*.pth
 outputs/*.png
+
+# Ignora i file Python compilati
+__pycache__/
+*.pyc
+
+# Ignora ambienti virtuali
+venv/
+.env/
