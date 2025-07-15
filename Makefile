@@ -17,7 +17,7 @@ test:
 
 # Analisi esplorativa dei dati
 eda:
-	python eda.py
+	python src/eda.py
 	@echo "✔ EDA complete."
 
 # Training del modello
