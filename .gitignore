@@ -2,3 +2,7 @@
 data/
 *.csv
 *.zip
+
+# Ignora modello e grafico generati
+outputs/*.pth
+outputs/*.png
