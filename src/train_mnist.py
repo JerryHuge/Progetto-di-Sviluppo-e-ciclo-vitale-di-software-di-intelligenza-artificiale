@@ -24,7 +24,7 @@ class SimpleCNN(nn.Module):
         )
         self.fc_layers = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(64 * 5 * 5, 64),  # output size after conv layers is [64,5,5]
+            nn.Linear(64 * 5 * 5, 64),  # output size dopo conv layers e' [64,5,5]
             nn.ReLU(),
             nn.Linear(64, 10)
         )
@@ -34,8 +34,9 @@ class SimpleCNN(nn.Module):
         x = self.fc_layers(x)
         return x
 
-def train_mnist(epochs: int, save_path: str = "mnist_model.pth"):
-    # Automatically download and load MNIST data
+def train_mnist(epochs: int, save_path: str = "outputs/mnist_model.pth"):
+    os.makedirs("outputs", exist_ok=True)  # 🔹 Crea la cartella se non esiste
+
     transform = transforms.Compose([transforms.ToTensor()])
     train_set = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=64, shuffle=True)
@@ -44,7 +45,6 @@ def train_mnist(epochs: int, save_path: str = "mnist_model.pth"):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    # Train the model on CPU
     start = time.time()
     for epoch in tqdm(range(epochs)):
         model.train()
@@ -56,14 +56,13 @@ def train_mnist(epochs: int, save_path: str = "mnist_model.pth"):
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
-        
+
         print(f'Epoch [{(epoch + 1)}/{epochs}], loss: {running_loss/len(train_loader):.4f}')
     
     print(f'Training time: {time.time() - start:.2f} seconds')
-    torch.save(model.state_dict(), save_path)
+    torch.save(model.state_dict(), save_path)  # 🔹 Salva il modello in outputs/
 
-def evaluate_mnist(model_path: str = "mnist_model.pth"):
-    # Automatically download and load MNIST data
+def evaluate_mnist(model_path: str = "outputs/mnist_model.pth"):
     transform = transforms.Compose([transforms.ToTensor()])
     test_set = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=1000, shuffle=False)
@@ -73,7 +72,6 @@ def evaluate_mnist(model_path: str = "mnist_model.pth"):
     model = SimpleCNN()
     model.load_state_dict(torch.load(model_path))
 
-    # Evaluate the model
     model.eval()
     correct = 0
     total = 0
@@ -91,20 +89,20 @@ def evaluate_mnist(model_path: str = "mnist_model.pth"):
 
     accuracy = correct / total
     print(f'\nTest accuracy: {accuracy:.4f}')
-    
-    # Classification report
+
     print("\nClassification Report:")
     print(classification_report(all_labels, all_preds))
 
-    # Plot confusion matrix
     conf_matrix = confusion_matrix(all_labels, all_preds)
-    plt.figure(figsize=(8,6))
+    plt.figure(figsize=(8, 6))
     sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues')
     plt.xlabel('Predicted')
     plt.ylabel('True')
     plt.title('Confusion Matrix')
+
+    os.makedirs("outputs", exist_ok=True)  # 🔹 Assicurati che la cartella esista
+    plt.savefig("outputs/confusion_matrix.png")  # 🔹 Salva nella cartella outputs
     plt.show(block=False)
-    plt.savefig("confusion_matrix.png")
 
 if __name__ == "__main__":
     train_mnist(5)
