@@ -1,0 +1,6 @@
+# Escludi cartelle e file locali che non servono nel container
+__pycache__/
+venv/
+data/
+outputs/
+*.pyc
